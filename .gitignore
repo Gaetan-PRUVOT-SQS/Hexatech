@@ -1,0 +1,9 @@
+node_modules/
+build/
+coverage/
+playwright-report/
+test-results/
+blob-report/
+docs/justifications/
+
+.env
