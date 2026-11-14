@@ -1,6 +1,7 @@
 # Cahier de recettes Hexatech
 
-Campagne ISTQB CTFL 4.0.1 / ISO/IEC/IEEE 29119. Date : 2026-11-14.
+Campagne de test pour le déploiement du site vitrine de la société Hexatech.
+ISTQB CTFL 4.0.1 / ISO/IEC/IEEE 29119. Date : 2026-11-14.
 
 Lancer : `npm test` (Vitest 5.1.0 + couverture v8, Playwright 1.63 Chromium). Page servie sur `http://127.0.0.1:4173`. Preuves visuelles : `build/preuves/`.
 
@@ -30,6 +31,7 @@ Jeux de données figés : nom `Marie Durand`, email `marie.durand@site.fr`, mess
 | AC-F4 | Une saisie HTML n'exécute rien et n'ajoute pas d'élément dans la zone de statut. |
 | AC-A1 | Parcours au clavier, focus visible, lien d'évitement. |
 | AC-A2 | Viewport 320 px sans défilement horizontal, liens de nav visibles. |
+| AC-D1 | Le dépôt se présente comme une campagne de test pour le déploiement de la vitrine Hexatech. |
 
 ## Traçabilité AC → recettes
 
@@ -43,6 +45,7 @@ Jeux de données figés : nom `Marie Durand`, email `marie.durand@site.fr`, mess
 | AC-F4 | R-F4, R-M6-html, R-M7-ok |
 | AC-A1 | R-A1-clavier, R-A1-axe, R-M5-skip, R-M7-focus |
 | AC-A2 | R-A2, R-M5-focus |
+| AC-D1 | R-M9-readme, R-M9-cahier |
 
 ## Recettes composant (Vitest)
 
@@ -135,6 +138,13 @@ Normalisation : `undefined`/`null` → `''` ; trim ; `+33 (0)6` → 4 chiffres.
 | R-M8-autre | autre erreur non relancée | `page closed` | 1 appel, throw |
 | R-M8-deux | deux échecs de capture | Unable to capture screenshot | throw la seconde |
 
+### M9 présentation du dépôt (`tests/unit/readme.test.js`)
+
+| Id | Nom | Attendu |
+|----|-----|---------|
+| R-M9-readme | README présente la campagne de déploiement Hexatech | titre `# Hexatech`, phrase « Campagne de test pour le déploiement du site vitrine de la société Hexatech », URL Pages |
+| R-M9-cahier | cahier de recettes porte la même campagne | même phrase dans `tests/cahier-recettes.md` |
+
 ## Recettes système (Playwright Chromium)
 
 Précondition : serveur `python3 -m http.server 4173 --bind 127.0.0.1` (lancé par la config).
@@ -173,6 +183,6 @@ Tous corrigés. Les recettes ci-dessus restent.
 
 ## Dernier passage
 
-2026-11-14, `npm test` : 63 unitaires / 63, 8 E2E / 8, 0 sauté. `app.js` : instructions 100 %, lignes 100 %, fonctions 100 %, branches 93,93 % (93/99). `npx eslint app.js tests` exit 0. Scan sécu des fichiers INC-12 exit 0.
+2026-11-14, `npm test` : 65 unitaires / 65, 8 E2E / 8, 0 sauté. `app.js` : instructions 100 %, lignes 100 %, fonctions 100 %, branches 93,93 % (93/99). `npx eslint app.js tests` exit 0. Scan sécu README / M9 exit 0.
 
 Risques résiduels : envoi de devis local (pas de réseau) ; validation client seulement ; gardes DOM non prises (lignes 116, 125, 176, 214, 229, 254) ; axe limité à Chromium.
