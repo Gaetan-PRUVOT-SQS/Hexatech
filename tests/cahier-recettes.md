@@ -31,6 +31,10 @@ Jeux de données figés : nom `Marie Durand`, email `marie.durand@site.fr`, mess
 | AC-F4 | Une saisie HTML n'exécute rien et n'ajoute pas d'élément dans la zone de statut. |
 | AC-A1 | Parcours au clavier, focus visible, lien d'évitement. |
 | AC-A2 | Viewport 320 px sans défilement horizontal, liens de nav visibles. |
+| AC-R1 | Aux largeurs 320, 375, 414, 768 et 667 paysage : pas de défilement horizontal, nav visible sans hamburger, cibles ≥ 24 px. |
+| AC-R3 | À 320 px, le H1 n'est pas masqué par la barre ; un clic Solutions pose le titre sous la nav. |
+| AC-R4 | Largeur 640 CSS px (zoom 200 % d'un 1280) : pas de défilement horizontal, H1 lisible, nav visible. |
+| AC-R5 | Après un envoi valide à 320 px, la notification tient dans la largeur. |
 | AC-D1 | Le dépôt se présente comme une campagne de test pour le déploiement de la vitrine Hexatech. |
 
 ## Traçabilité AC → recettes
@@ -45,6 +49,10 @@ Jeux de données figés : nom `Marie Durand`, email `marie.durand@site.fr`, mess
 | AC-F4 | R-F4, R-M6-html, R-M7-ok |
 | AC-A1 | R-A1-clavier, R-A1-axe, R-M5-skip, R-M7-focus |
 | AC-A2 | R-A2, R-M5-focus |
+| AC-R1 | R-R1-320, R-R1-375, R-R1-414, R-R1-768, R-R1-667, R-M13-css |
+| AC-R3 | R-R3, R-M13-css, R-M4-decalage |
+| AC-R4 | R-R4 |
+| AC-R5 | R-R5 |
 | AC-D1 | R-M9-readme, R-M9-cahier |
 
 ## Recettes composant (Vitest)
@@ -91,6 +99,7 @@ Normalisation : `undefined`/`null` → `''` ; trim ; `+33 (0)6` → 4 chiffres.
 | R-M4-fin | dernière section | scroll 2000 | `contact` |
 | R-M4-barre | seuil 50 : égal reste plat, 51 défile | 50 / 51 / 0 | faux / vrai / faux |
 | R-M4-lien | active le href qui matche, retire les autres | id `solutions` puis `inconnu` | `aria-current="location"` sur Solutions, puis retiré |
+| R-M4-decalage | hauteur de barre ou repli 96 | barre nulle / 0 / 188 | 96, 96, 188 |
 
 ### M5 balisage (`tests/unit/markup.test.js`)
 
@@ -105,6 +114,7 @@ Normalisation : `undefined`/`null` → `''` ; trim ; `+33 (0)6` → 4 chiffres.
 | R-M5-skip | lien d évitement et footer hors du main | `Aller au contenu`, footer après `</main>` |
 | R-M5-xss | pas de texte orphelin Boutique ni injection DOM | pas de Boutique, pas d'`innerHTML`, pas d'`eval(` |
 | R-M5-focus | polices locales et focus visible | Nunito locale, `:focus-visible`, pas Google Fonts |
+| R-M13-css | reflow mobile : nav visible, grille fluide, ancre sous la barre | pas de hamburger, `scroll-padding-top`, `minmax(min(280px, 100%), 1fr)`, nav pas en `display: none` |
 
 ### M6 notifications (`tests/unit/notifications.test.js`)
 
@@ -159,6 +169,16 @@ Précondition : serveur `python3 -m http.server 4173 --bind 127.0.0.1` (lancé p
 | R-A1-clavier | AC-A1 clavier : skip link et champs du formulaire | `tests/e2e/accessibilite.spec.js` | Tab, Entrée, focus Nom, Tab | `Aller au contenu`, puis ids `contenu`, `name`, `email` |
 | R-A1-axe | AC-A1 axe WCAG 2.2 A et AA | `tests/e2e/accessibilite.spec.js` | analyser wcag2a, wcag2aa, wcag22aa | `violations === []` |
 | R-A2 | AC-A2 reflow 320 px, nav visible | `tests/e2e/accessibilite.spec.js` | viewport 320×640 | dépassement `< 2`, lien Contact texte `Contact` href `#contact` |
+| R-R1-320 | AC-R1 reflow et nav 320×640 | `tests/e2e/responsive.spec.js` | viewport 320×640 | overflow dans ]-1, 2[, 5 liens visibles ≥ 24 px, pas de hamburger |
+| R-R1-375 | AC-R1 reflow et nav 375×667 | `tests/e2e/responsive.spec.js` | viewport 375×667 | idem |
+| R-R1-414 | AC-R1 reflow et nav 414×896 | `tests/e2e/responsive.spec.js` | viewport 414×896 | idem |
+| R-R1-768 | AC-R1 reflow et nav 768×1024 | `tests/e2e/responsive.spec.js` | viewport 768×1024 | idem |
+| R-R1-667 | AC-R1 reflow et nav 667×375 | `tests/e2e/responsive.spec.js` | viewport 667×375 paysage | idem |
+| R-R3 | AC-R3 h1 et ancre sous la barre à 320 px | `tests/e2e/responsive.spec.js` | 320×640, clic Solutions | H1 sous la nav, titre Solutions sous la nav |
+| R-R4 | AC-R4 zoom 200 % (640 CSS px) | `tests/e2e/responsive.spec.js` | 640×512 | overflow dans ]-1, 2[, H1 pas couvert, nav visible |
+| R-R5 | AC-R5 notification tient à 320 px | `tests/e2e/responsive.spec.js` | envoi jeu figé à 320×640 | statut = succès, largeur notif ≤ 320, overflow dans ]-1, 2[ |
+
+Sondage Pages (SUT déployé) : `node tests/sondage-pages.js https://gaetan-pruvot-sqs.github.io/Hexatech/`. Sortie : `build/preuves/sondage-layout.json`.
 
 AC-F2 n'a pas de parcours E2E dédié : R-M7-ko et R-M3-* le couvrent au composant.
 
@@ -180,9 +200,10 @@ Tous corrigés. Les recettes ci-dessus restent.
 | INC-10 | faible | R-M5-xss | corrigé |
 | INC-11 | moyenne | R-A1-clavier, R-M7-focus | corrigé |
 | INC-12 | moyenne | R-P1, R-A2, R-M8-retry | corrigé |
+| INC-13 | élevée | R-R3 | corrigé : H1 masqué par la nav à 320–414 px sur Pages |
 
 ## Dernier passage
 
-2026-11-14, `npm test` : 65 unitaires / 65, 8 E2E / 8, 0 sauté. `app.js` : instructions 100 %, lignes 100 %, fonctions 100 %, branches 93,93 % (93/99). `npx eslint app.js tests` exit 0. Scan sécu README / M9 exit 0.
+2026-11-14, `npm test` : 68 unitaires / 68, 16 E2E / 16, 0 sauté. `app.js` : instructions 100 %, lignes 100 %, fonctions 100 %, branches 94,87 % (111/117). `npx eslint app.js tests` exit 0. Scan sécu exit 0.
 
-Risques résiduels : envoi de devis local (pas de réseau) ; validation client seulement ; gardes DOM non prises (lignes 116, 125, 176, 214, 229, 254) ; axe limité à Chromium.
+Risques résiduels : envoi de devis local (pas de réseau) ; validation client seulement ; gardes DOM non prises (lignes 116, 125, 176, 228, 245, 270) ; axe limité à Chromium ; sondage Pages dépend du réseau et du délai de rebuild GitHub.

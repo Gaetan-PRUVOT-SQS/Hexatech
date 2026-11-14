@@ -192,13 +192,27 @@ export function lireSections(doc) {
     }))
 }
 
+export function decalageBarre(barre, repli = DECALAGE_SECTION) {
+    const hauteur = barre && barre.offsetHeight > 0 ? barre.offsetHeight : 0
+    let padding = 0
+    const doc = barre && barre.ownerDocument
+    if (doc && doc.documentElement && typeof getComputedStyle === 'function') {
+        const n = Number.parseFloat(getComputedStyle(doc.documentElement).scrollPaddingTop)
+        if (Number.isFinite(n) && n > 0) {
+            padding = n
+        }
+    }
+    const candidat = Math.max(hauteur, padding)
+    return candidat > 0 ? candidat : repli
+}
+
 export function surveillerDefilement(doc, win) {
     const barre = doc.querySelector('.navbar')
     if (barre) {
         barre.classList.toggle('defilee', barreDefilee(win.scrollY))
     }
     const liens = doc.querySelectorAll('.nav-links a[href^="#"]')
-    const id = idSectionActive(lireSections(doc), win.scrollY)
+    const id = idSectionActive(lireSections(doc), win.scrollY, decalageBarre(barre))
     appliquerLienActif(liens, id)
 }
 
@@ -214,6 +228,8 @@ export function allerA(doc, id) {
     if (typeof cible.focus === 'function') {
         cible.focus({ preventScroll: true })
     }
+    const liens = doc.querySelectorAll('.nav-links a[href^="#"]')
+    appliquerLienActif(liens, id)
     return true
 }
 

@@ -12,6 +12,8 @@ export default [
         Event: 'readonly',
         DOMParser: 'readonly',
         getComputedStyle: 'readonly',
+        process: 'readonly',
+        console: 'readonly',
       },
     },
     rules: {

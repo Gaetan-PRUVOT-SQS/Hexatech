@@ -1,8 +1,10 @@
 import { describe, expect, test } from 'vitest'
 import {
+  DECALAGE_SECTION,
   SEUIL_BARRE,
   appliquerLienActif,
   barreDefilee,
+  decalageBarre,
   idSectionActive,
 } from '../../app.js'
 
@@ -38,6 +40,23 @@ describe('barre de navigation', () => {
     expect(barreDefilee(SEUIL_BARRE)).toBe(false)
     expect(barreDefilee(SEUIL_BARRE + 1)).toBe(true)
     expect(barreDefilee(0)).toBe(false)
+  })
+
+  test('decalage : repli sans barre, hauteur réelle sinon', () => {
+    expect(decalageBarre(null)).toBe(DECALAGE_SECTION)
+    expect(decalageBarre({ offsetHeight: 0 })).toBe(DECALAGE_SECTION)
+    expect(decalageBarre({ offsetHeight: 188 })).toBe(188)
+  })
+
+  test('decalage : padding d ancre plus grand que la barre', () => {
+    const doc = new DOMParser().parseFromString(
+      '<html><body><nav class="navbar"></nav></body></html>',
+      'text/html',
+    )
+    doc.documentElement.style.scrollPaddingTop = '112px'
+    const barre = doc.querySelector('.navbar')
+    Object.defineProperty(barre, 'offsetHeight', { configurable: true, value: 72 })
+    expect(decalageBarre(barre)).toBe(112)
   })
 })
 

@@ -74,4 +74,11 @@ describe('M5 balisage', () => {
     expect(css.includes(':focus-visible')).toBe(true)
     expect(html.includes('fonts.googleapis.com')).toBe(false)
   })
+
+  test('reflow mobile : nav visible, grille fluide, ancre sous la barre', () => {
+    expect(css.includes('hamburger')).toBe(false)
+    expect(css.includes('scroll-padding-top')).toBe(true)
+    expect(css.includes('minmax(min(280px, 100%), 1fr)')).toBe(true)
+    expect(/\.nav-links\s*\{[^}]*display:\s*none/.test(css)).toBe(false)
+  })
 })

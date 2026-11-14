@@ -142,6 +142,8 @@ describe('M7 init', () => {
     expect(allerA(doc, 'contenu')).toBe(true)
     expect(contenu.scrollIntoView).toHaveBeenCalled()
     expect(contenu.focus).toHaveBeenCalledWith({ preventScroll: true })
+    expect(allerA(doc, 'solutions')).toBe(true)
+    expect(doc.querySelector('a[href="#solutions"]').getAttribute('aria-current')).toBe('location')
     expect(allerA(doc, '')).toBe(false)
     const mute = doc.getElementById('solutions')
     mute.scrollIntoView = undefined
