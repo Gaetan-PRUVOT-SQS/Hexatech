@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { capturerPreuve } from '../lib/preuve.js'
 
 const TITRE = 'Hexatech - Alarmes et vidéosurveillance'
 const H1 = 'Hexatech, expert en sous-traitance sécurité'
@@ -12,7 +13,7 @@ test('AC-P1 page chargée avec styles et titre', { annotation: { type: 'expect',
   expect(await page.getByRole('heading', { level: 1 }).innerText()).toBe(H1)
   const position = await page.locator('.navbar').evaluate((el) => getComputedStyle(el).position)
   expect(position).toBe('fixed')
-  await page.screenshot({ path: 'build/preuves/accueil-1280.png' })
+  await capturerPreuve(page, 'build/preuves/accueil-1280.png')
 })
 
 test('AC-N1 navigation interne vers chaque section', { annotation: { type: 'expect', description: 'Nos solutions' } }, async ({ page }) => {

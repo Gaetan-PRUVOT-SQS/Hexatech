@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
+import { capturerPreuve } from '../lib/preuve.js'
 
 test('AC-A1 clavier : skip link et champs du formulaire', { annotation: { type: 'expect', description: 'contenu' } }, async ({ page }) => {
   await page.goto('/')
@@ -33,5 +34,5 @@ test('AC-A2 reflow 320 px, nav visible', { annotation: { type: 'expect', descrip
     .getByRole('link', { name: 'Contact' })
   expect(await lien.innerText()).toBe('Contact')
   expect(await lien.getAttribute('href')).toBe('#contact')
-  await page.screenshot({ path: 'build/preuves/accueil-320.png' })
+  await capturerPreuve(page, 'build/preuves/accueil-320.png')
 })

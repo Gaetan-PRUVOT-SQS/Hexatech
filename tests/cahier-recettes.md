@@ -126,6 +126,15 @@ Normalisation : `undefined`/`null` → `''` ; trim ; `+33 (0)6` → 4 chiffres.
 | R-M7-barre | surveillerDefilement pose defilee et le lien actif | classe absente à 0, présente à 80 |
 | R-M7-sans | init sans formulaire ne jette pas | pas d'exception |
 
+### M8 preuve screenshot (`tests/unit/preuve.test.js`)
+
+| Id | Nom | Entrée | Attendu |
+|----|-----|--------|---------|
+| R-M8-ok | premier essai réussi | screenshot tient | 1 appel, `animations: 'disabled'` |
+| R-M8-retry | relance une fois après erreur de capture | Protocol error puis succès | 2 appels |
+| R-M8-autre | autre erreur non relancée | `page closed` | 1 appel, throw |
+| R-M8-deux | deux échecs de capture | Unable to capture screenshot | throw la seconde |
+
 ## Recettes système (Playwright Chromium)
 
 Précondition : serveur `python3 -m http.server 4173 --bind 127.0.0.1` (lancé par la config).
@@ -160,9 +169,10 @@ Tous corrigés. Les recettes ci-dessus restent.
 | INC-09 | moyenne | R-A1-axe | corrigé |
 | INC-10 | faible | R-M5-xss | corrigé |
 | INC-11 | moyenne | R-A1-clavier, R-M7-focus | corrigé |
+| INC-12 | moyenne | R-P1, R-A2, R-M8-retry | corrigé |
 
 ## Dernier passage
 
-2026-11-14, `npm test` : 59 unitaires / 59, 8 E2E / 8, 0 sauté. `app.js` : instructions 100 %, lignes 100 %, fonctions 100 %, branches 93,93 % (93/99). `npx eslint app.js tests` exit 0. `cyber-scan.sh --root . .` exit 0.
+2026-11-14, `npm test` : 63 unitaires / 63, 8 E2E / 8, 0 sauté. `app.js` : instructions 100 %, lignes 100 %, fonctions 100 %, branches 93,93 % (93/99). `npx eslint app.js tests` exit 0. Scan sécu des fichiers INC-12 exit 0.
 
 Risques résiduels : envoi de devis local (pas de réseau) ; validation client seulement ; gardes DOM non prises (lignes 116, 125, 176, 214, 229, 254) ; axe limité à Chromium.
