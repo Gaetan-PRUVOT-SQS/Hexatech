@@ -1,22 +1,25 @@
 # Hexatech
 
-Campagne de test pour le déploiement du site vitrine de la société Hexatech
-(sous-traitance alarmes et vidéosurveillance).
+English · [Français](README.fr.md)
 
-La page à la racine est le livrable sous test. La campagne suit ISTQB CTFL 4.0.1
-et ISO/IEC/IEEE 29119. Le cahier de recettes est `tests/cahier-recettes.md`.
+Test campaign for the deployment of the Hexatech showcase site (alarm
+and video surveillance subcontracting).
 
-## Site sous test
+The page at the root is the deliverable under test. The campaign follows
+ISTQB CTFL 4.0.1 and ISO/IEC/IEEE 29119. The test charter is
+`tests/cahier-recettes.md`.
 
-Servir le dossier :
+## Site under test
+
+Serve the folder:
 
 ```
 python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-Puis ouvrir `http://127.0.0.1:4173`.
+Then open `http://127.0.0.1:4173`.
 
-## Lancer la campagne
+## Run the campaign
 
 ```
 npm install
@@ -24,10 +27,10 @@ npx playwright install chromium
 npm test
 ```
 
-Vitest (couverture v8, seuil 90 %), Playwright Chromium, axe WCAG 2.2.
+Vitest (v8 coverage, 90% threshold), Playwright Chromium, axe WCAG 2.2.
 
-## Déploiement
+## Deployment
 
-GitHub Pages, branche `main`, dossier `/` :
+GitHub Pages, `main` branch, `/` folder:
 
 https://gaetan-pruvot-sqs.github.io/Hexatech/
